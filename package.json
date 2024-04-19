@@ -1,0 +1,22 @@
+{
+  "name": "argot_backend",
+  "module": "index.ts",
+  "type": "module",
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "scripts": {
+    "dev": "bun --hot run src/index.ts"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@types/axios": "^0.14.0",
+    "@types/express": "^4.17.21",
+    "@types/mongoose": "^5.11.97",
+    "axios": "^1.6.8",
+    "express": "^4.19.2",
+    "mongoose": "^8.3.2"
+  }
+}
