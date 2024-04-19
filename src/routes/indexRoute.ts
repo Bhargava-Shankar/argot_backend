@@ -3,8 +3,10 @@ import axios, { AxiosResponse } from "axios";
 
 const router = Router();
 
-function strip(html: string) {
-    return html.replace(/<\s*(?:[^>\n]+)*(?:\s+[^>\n]+)*\s*\/?>/gi, '');
+function strip(html: string | undefined) {
+    if (undefined) return "";
+    if (typeof html == "object") html = html[0];
+    return html?.replace(/<\s*(?:[^>\n]+)*(?:\s+[^>\n]+)*\s*\n*\/?>/gi, '');
 
 }
 
@@ -19,11 +21,22 @@ router.get("/defintion/:word", async(req: Request, res: Response) => {
             data.map((value: any) => {
                 const definitions = value['definitions'];
                 definitions.map((definition: any) => {
-                    output.push({
-                        "definition" : strip(definition['definition'])
-                    });
-                    console.log(definition);
+                    if (definition["definition"] != "") {
+                        output.push({
+                            "partOfSpeech": value['partOfSpeech'],
+                            "definition": strip(definition['definition']),
+                            "example": strip(definition['examples']),
+                        });
+                        // if (definition['examples']) {
+                        //     console.log(definition['example'])
+                        //     console.log(definition['examples'][0]);
+                        // }
+                        console.log(definition['examples']);
+                        //console.log(definition);
+                    }
                 })
+                //console.log(data);
+                return;
             })
             res.send(output.slice(0,5));
 
