@@ -4,6 +4,7 @@ interface WordT {
     definition: string,
     customDefinition?: string,
     example?: string,
+    vaultIDs?: string[]
 }
 
 

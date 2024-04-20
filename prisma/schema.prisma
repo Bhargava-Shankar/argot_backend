@@ -15,7 +15,7 @@ datasource db {
 
 model Vault{
   id String @id @default(auto()) @map("_id") @db.ObjectId
-  vaultName String
+  vaultName String @unique
   vaultDescription String
   wordIDs String[] @db.ObjectId
   words Word[] @relation(fields: [wordIDs], references: [id])
@@ -26,8 +26,10 @@ model Word{
   wordName String 
   partOfSpeech String
   definition String
-  customDefinition String
-  example String
+  customDefinition String @default("")
+  example String @default("")
   vaultIDs String[] @db.ObjectId
   vaults Vault[] @relation(fields: [vaultIDs], references: [id])
+
+  @@unique( name:"uniqueWordComb", [wordName,partOfSpeech,definition])
 }
