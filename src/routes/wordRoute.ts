@@ -26,12 +26,16 @@ router.get("/word-definitions/:word", async(req: Request, res: Response) => {
 })
 
 //SAVE THE WORD TO FAVOURITES
-router.post("/word/favourites", async(req, res) => {
+router.post("/word/", async(req, res) => {
     //GET THE ID OF FAVOURITES
+  console.log(req.query);
+  ////CLUMSY CODE
+    const vaultNameParam = req.query['vaultNameParam'];
+    //CHECK IF THE VAULT EXISTS 
     try {
         const favouriteVaultID = await db.vault.findUnique({
             where: {
-                vaultName: "Favourites"
+                vaultName: vaultNameParam
             },
             select: {
                 id: true
@@ -58,12 +62,27 @@ router.post("/word/favourites", async(req, res) => {
                 }
             }
         })
-        res.send(findAndUpdate);
+      
+      const wordID = findAndUpdate['id'];
+
+      //ADD WORD ID TO RESPECTIVE VAULT IT IS STORED
+      const findAndUpdateVault = await db.vault.update({
+        where: {
+          id: favouriteVaultID['id']
+        },
+        data: {
+          wordIDs: {
+            push: wordID
+          }
+        }
+      })
+        res.send(findAndUpdateVault);
         
     }
     catch (e: any) {
         res.send(e);
-    }
+  }
+  ////CLUMSY CODE ENDS
 })
 
 

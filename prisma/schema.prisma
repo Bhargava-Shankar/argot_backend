@@ -17,8 +17,16 @@ model Vault{
   id String @id @default(auto()) @map("_id") @db.ObjectId
   vaultName String @unique
   vaultDescription String
-  wordIDs String[] @db.ObjectId
-  words Word[] @relation(fields: [wordIDs], references: [id])
+  Word VaultWords[]
+}
+
+model VaultWords {
+  is String @id @default(auto()) @map("_id") @db.ObjectId
+  wordId String @db.ObjectId
+  words Word @relation(fields: [wordId], references: [id])
+  vaultId String @db.ObjectId
+  vaults Vault @relation(fields: [vaultId], references: [id])
+  
 }
 
 model Word{
@@ -28,8 +36,7 @@ model Word{
   definition String
   customDefinition String @default("")
   example String @default("")
-  vaultIDs String[] @db.ObjectId
-  vaults Vault[] @relation(fields: [vaultIDs], references: [id])
-
+  Vault VaultWords[]
+  
   @@unique( name:"uniqueWordComb", [wordName,partOfSpeech,definition])
 }
