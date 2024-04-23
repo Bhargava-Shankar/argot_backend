@@ -36,25 +36,49 @@ router.get("/vaults", async (req: Request, res: Response) => {
     catch (e) {
         res.send(e);
     }
-    
+
 })
 
-//ADD A WORD TO A VAULT
-router.post("/vaults/:vaultId/word", async (req, res) => {
-    const wordToBeSaved: WordT = req.body;
-    const vaultId: string = req.params['vaultId'];
-    const wordSavedInVault = await db.word.create({
-        data: {
-            ...wordToBeSaved,
-            Vault: {
-                create: {
-                    vaultId: vaultId
-                }
+//UPDATE A VAULT
+router.put("/vault/:vaultId", async (req, res) => {
+    const vaultData: VaultT = req.body;
+    try {
+        const vaultResponse = await db.vault.update({
+            where: {
+                id : req.params['vaultId']
+            },
+            data: {
+                ...vaultData
             }
-        }
-    });
-    res.send(wordSavedInVault);
+        })
+        
+        res.send(vaultResponse);
+    }
+    catch (e) {
+        res.send(e);
+    }
 })
+
+//DELETE VAULT
+router.delete("/vault/:vaultId", async (req, res) => {
+    try{
+        const vaultId = req.params.vaultId;
+        const deleteResponse = await db.vault.delete({
+            where: {
+                id: vaultId
+            }
+        })
+        res.send(deleteResponse);
+    }
+    catch (e) {
+        res.send(e);
+    }
+})
+
+
+
+
+
 
 
 

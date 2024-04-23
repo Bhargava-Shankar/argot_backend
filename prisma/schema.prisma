@@ -23,9 +23,9 @@ model Vault{
 model VaultWords {
   is String @id @default(auto()) @map("_id") @db.ObjectId
   wordId String @db.ObjectId
-  words Word @relation(fields: [wordId], references: [id])
+  words Word @relation(fields: [wordId], references: [id], onDelete: Cascade)
   vaultId String @db.ObjectId
-  vaults Vault @relation(fields: [vaultId], references: [id])
+  vaults Vault @relation(fields: [vaultId], references: [id], onDelete: Cascade)
   
 }
 
