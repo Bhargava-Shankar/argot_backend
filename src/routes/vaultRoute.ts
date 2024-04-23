@@ -1,6 +1,7 @@
 import { Router, Response, Request, response } from "express";
 import PrismaDB from "../factory/prismaClient";
 import { PrismaClient } from "@prisma/client/extension";
+import WordT from "../interfaces";
 
 interface VaultT{
     vaultName: string,
@@ -26,6 +27,7 @@ router.post("/vault", async(req: Request, res: Response) => {
     }
 })
 
+//GET ALL VAULTS
 router.get("/vaults", async (req: Request, res: Response) => {
     try {
         const vaults: VaultT[] = await db.vault.findMany();
@@ -37,6 +39,22 @@ router.get("/vaults", async (req: Request, res: Response) => {
     
 })
 
+//ADD A WORD TO A VAULT
+router.post("/vaults/:vaultId/word", async (req, res) => {
+    const wordToBeSaved: WordT = req.body;
+    const vaultId: string = req.params['vaultId'];
+    const wordSavedInVault = await db.word.create({
+        data: {
+            ...wordToBeSaved,
+            Vault: {
+                create: {
+                    vaultId: vaultId
+                }
+            }
+        }
+    });
+    res.send(wordSavedInVault);
+})
 
 
 
